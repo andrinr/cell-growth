@@ -1,15 +1,15 @@
-int cellSize = 5;
-int radius = 100;
+int cellSize = 6;
+int radius = 200;
 int num = 100;
-int max = 2000;
+int max = 10000;
 int steps = 3;
 int picks = 50;
 float angle = TWO_PI / float(num);
-int optimalDistance = 5;
+int optimalDistance = 6;
 
 cell[] cellObj = new cell[num];
 void setup(){
-  size(800,800);
+  size(1000,1000);
   for (int i = 0; i < num; i++){
     cellObj[i] = new cell(width/2+radius*sin(angle*i),height/2+radius*cos(angle*i),0,0);
   }
@@ -23,6 +23,8 @@ int coord(float a) {
 }
 void draw(){
   background(0,0.01);
+  print("   fps: ");
+  print(int(frameRate));
   for (int i = 0; i < num; i++){
     for (int s = 1; s < steps; s++){
       cellObj[i].keepDistance(cellObj[coord(float(i)-s)],0.0001-0.0001*(float(s)/steps), s*optimalDistance);
@@ -40,8 +42,10 @@ void draw(){
     
     cellObj[i].update();
     cellObj[i].display();
+
   }
-  if(num < max && frameCount % 2 == 0){
+  
+  if(num < max && frameCount % 1 == 0){
     int index = int(random(0,num));
     float xP = cellObj[coord(float(index)-1.0)].getX();
     float yP = cellObj[coord(float(index)-1.0)].getY();
