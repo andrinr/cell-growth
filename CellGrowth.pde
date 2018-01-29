@@ -1,20 +1,27 @@
+// Cell attributes
 int cellSize = 6;
+int optimalDistance = 6;
+
+// initial shape
 int radius = 200;
 int num = 100;
 int max = 10000;
+
+// details
 int steps = 3;
 int picks = 50;
 float angle = TWO_PI / float(num);
-int optimalDistance = 6;
 
 cell[] cellObj = new cell[num];
+
 void setup(){
   size(1000,1000);
+  // draw circle
   for (int i = 0; i < num; i++){
     cellObj[i] = new cell(width/2+radius*sin(angle*i),height/2+radius*cos(angle*i),0,0);
   }
-    
 }
+// function to return proper coords within array length range
 int coord(float a) {
   a = a / float(num);
   a = a - floor(a);
@@ -23,28 +30,31 @@ int coord(float a) {
 }
 void draw(){
   background(0,0.01);
-  print("   fps: ");
-  print(int(frameRate));
+
   for (int i = 0; i < num; i++){
+    // Keep distance to closest cells
     for (int s = 1; s < steps; s++){
       cellObj[i].keepDistance(cellObj[coord(float(i)-s)],0.0001-0.0001*(float(s)/steps), s*optimalDistance);
       cellObj[i].keepDistance(cellObj[coord(float(i)+s)],0.0001-0.0001*(float(s)/steps), s*optimalDistance);
     }
     
+    // move away from certain amount (picks) of random other cells
+    // random other cell is choosen differently in every frame
+    // Way more efficent than looping thrue all other cells and equally effective
     for (int s = 1; s < picks; s++){
       int index = int(random(0,num-2*steps));
+      // Avoid moving away from neigbouring cells
       if( index >= i-steps){
         index += 2*steps;
       }
       cellObj[i].avoid(cellObj[index],0.0008-0.0008*(float(s)/steps));
       cellObj[i].avoid(cellObj[index],0.0008-0.0008*(float(s)/steps));
     }
-    
     cellObj[i].update();
     cellObj[i].display();
-
   }
   
+  // Introduce new cells at random locations
   if(num < max && frameCount % 1 == 0){
     int index = int(random(0,num));
     float xP = cellObj[coord(float(index)-1.0)].getX();
@@ -63,6 +73,7 @@ void draw(){
     num += 1;
   }
 }
+
 class cell {
   float x;
   float y;
