@@ -1,5 +1,6 @@
+
 // Cell attributes
-int cellSize = 6;
+int cellSize = 10;
 int optimalDistance = 6;
 
 // initial shape
@@ -8,8 +9,8 @@ int num = 100;
 int max = 10000;
 
 // details
-int steps = 3;
-int picks = 50;
+int steps = 6;
+int picks = 100;
 float angle = TWO_PI / float(num);
 
 cell[] cellObj = new cell[num];
@@ -29,7 +30,7 @@ int coord(float a) {
   return int(a);
 }
 void draw(){
-  background(0,0.01);
+  background(255);
 
   for (int i = 0; i < num; i++){
     // Keep distance to closest cells
@@ -95,8 +96,9 @@ class cell {
   }
   
   void display(){
-    fill(255);
-    strokeWeight(0);
+    //fill(0);
+    strokeWeight(1);
+    stroke(0);
     ellipse(x,y,cellSize, cellSize);
   }
   
