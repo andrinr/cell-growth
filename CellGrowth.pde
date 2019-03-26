@@ -1,7 +1,7 @@
 
 // Cell attributes
 int cellSize = 10;
-int optimalDistance = 6;
+int optimalDistance = 5;
 
 // initial shape
 int radius = 200;
@@ -9,11 +9,16 @@ int num = 100;
 int max = 10000;
 
 // details
-int steps = 6;
-int picks = 100;
+int steps = 10;
+int picks = 200;
 float angle = TWO_PI / float(num);
 
 cell[] cellObj = new cell[num];
+cell mouse = new cell(0,0,0,0);
+
+void keyPressed(){
+  saveFrame("C:/Users/redxp/Projects/CellGrowth/####.png");
+}
 
 void setup(){
   size(1000,1000);
@@ -38,6 +43,10 @@ void draw(){
       cellObj[i].keepDistance(cellObj[coord(float(i)-s)],0.0001-0.0001*(float(s)/steps), s*optimalDistance);
       cellObj[i].keepDistance(cellObj[coord(float(i)+s)],0.0001-0.0001*(float(s)/steps), s*optimalDistance);
     }
+    
+    mouse.x = mouseX;
+    mouse.y = mouseY;
+    cellObj[i].avoid(mouse,-2);
     
     // move away from certain amount (picks) of random other cells
     // random other cell is choosen differently in every frame
@@ -68,7 +77,7 @@ void draw(){
     xP *= 0.5;
     yP *= 0.5;
     
-    cell ins = new cell(xN + yP, yN + yP,0,0);
+    cell ins = new cell(xN + xP, yN + yP,0,0);
     cellObj = (cell[])splice(cellObj,ins,index);
     //cellObj = splice(cellObj, ins, index);
     num += 1;
@@ -119,7 +128,7 @@ class cell {
     ax += l * targetX;
     ay += l * targetY;
   }
-  
+
   void avoid(cell cellObj, float s){
     float targetX = cellObj.getX();
     float targetY = cellObj.getY();
